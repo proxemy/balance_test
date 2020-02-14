@@ -31,13 +31,22 @@ class Arena():
 			raise Exception("'num_matches' must be an even number.")
 	
 		for r in range(num_rounds):
+
 			self.reset()
 
-			for i, agent in enumerate(self.agents):
+			is_winner = False
 
-				opponent_idx = (i+1)%2
+			while not is_winner:
 
-				agent.fight(self.agents[opponent_idx])
+				for i, agent in enumerate(self.agents):
+
+					opponent_idx = (i+1)%2
+
+					is_winner = agent.fight(self.agents[opponent_idx])
+
+					if is_winner:
+						pass
+
 
 	def print_result(self):
 		pass

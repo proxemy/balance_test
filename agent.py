@@ -17,10 +17,27 @@ class Agent():
 		self.position = None
 
 
-	def fight(self, target):
+	def fight(self, target) -> bool:
+
+		if not self.in_range_to(target):
+			self.move_to(target)
+
+		else:
+			self.attack(target)
+
+		return target.health <= 0
+
+
+	def in_range_to(self, target) -> bool:
+		#TODO: check all skill ranges for further actions
+		return abs(self.position - target.position) < self.skills[0].range
+
+	def move_to(self, target):
+		
+		if self.position < target.position:
+			direc
+
+	def attack(self, target):
+		#TODO
 		pass
-
-
-	def is_dead(self) -> bool:
-		return self.health > 0
 
