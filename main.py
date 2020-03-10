@@ -13,6 +13,7 @@ class Arena():
 
 	def __init__(self, agents: list):
 		self.agents = agents
+		self.result = dict()
 
 
 	def reset(self):
@@ -58,15 +59,30 @@ class Arena():
 
 
 	def collect_stats(self):
-		pass
+		winner = self.get_winner()
+
+		if winner.name not in self.result.keys():
+			self.result.update({winner.name : 0})
+
+		self.result[winner.name] += 1
 
 
 	def print_stats(self):
-		pass
+		print(
+			" --- Result:\n" + \
+			"\n".join(str(i) for i in self.result.items())
+		)
 
 
 	def get_winner(self):
-		return 
+		winner = [ a for a in self.agents if a.health > 0 ]
+
+		if len(winner) > 1:
+			raise Exception("More than one agent alive")
+		elif len(winner) == 0:
+			raise Exception("No agents alive")
+
+		return winner[0]
 
 	def print_agents(self):
 		s = " --- ".join((str(a) for a in self.agents))
@@ -74,17 +90,7 @@ class Arena():
 
 
 	def print_winner(self):
-		winner = [ a for a in self.agents if a.health > 0 ]
-		print()
-
-		if len(winner) > 1:
-			print("More than one agent alive.")
-
-		elif len(winner) == 1:
-			print("\033[31mWinner\033[00m: {}".format(winner[0].get_name()))
-
-		else:
-			print("Tie.")
+		print("\n\033[31mWinner\033[00m: " + self.get_winner().get_name())
 
 
 
