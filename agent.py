@@ -15,18 +15,21 @@ class Agent():
 		self.health = 1000
 		self.move_speed = 10
 		self.position = None
+	
+	def get_name(self):
+		return "\033[4m" + str(self.name) + "\033[0m"
+
+	def get_hp(self):
+		return "\033[92m" + str(self.health) + "\033[0m"
+
+	def get_pos(self):
+		return "\033[94m" + str(self.position) + "\033[0m"
 
 	def __repr__(self):
-
-		name = lambda n : "\033[4m" + str(n) + "\033[0m"
-		hp = lambda h : "\033[92m" + str(h) + "\033[0m"
-		pos = lambda p : "\033[94m" + str(p) + "\033[0m"
-
-
 		return \
-			name(self.name) +": " +\
-			"HP(" + hp(self.health) + "), "\
-			"Pos(" + pos(self.position) + ")"
+			self.get_name() +": " +\
+			"HP(" + self.get_hp() + "), "\
+			"Pos(" + self.get_pos() + ")"
 
 
 	def fight(self, target) -> bool:

@@ -27,7 +27,6 @@ class Arena():
 			agent.health = 1000
 
 
-
 	def fight(self, num_rounds: int):
 
 		if num_rounds % 2 != 0:
@@ -35,7 +34,7 @@ class Arena():
 	
 		for r in range(num_rounds):
 
-			print("\nRound: {}".format(r))
+			print(" --- Round: {}".format(r))
 			self.reset()
 
 			is_winner = False
@@ -43,7 +42,6 @@ class Arena():
 			while not is_winner:
 
 				for i, agent in enumerate(self.agents):
-
 					opponent_idx = (i+1)%2
 
 					is_winner = agent.fight(self.agents[opponent_idx])
@@ -52,28 +50,42 @@ class Arena():
 						break
 
 				self.print_agents()
-	
-				if is_winner:
-					print("\nWinner")
 
-				self.render_battlefield()
+			self.print_winner()
+			self.collect_stats()
 
-				sleep(0.1)
+		self.print_stats()
 
 
-	def print_result(self):
+	def collect_stats(self):
 		pass
 
 
+	def print_stats(self):
+		pass
+
+
+	def get_winner(self):
+		return 
+
 	def print_agents(self):
-
 		s = " --- ".join((str(a) for a in self.agents))
-
 		print(s + (len(s)//4) * " " + "\r", end="")
 
 
-	def render_battlefield(self):
-		pass
+	def print_winner(self):
+		winner = [ a for a in self.agents if a.health > 0 ]
+		print()
+
+		if len(winner) > 1:
+			print("More than one agent alive.")
+
+		elif len(winner) == 1:
+			print("\033[31mWinner\033[00m: {}".format(winner[0].get_name()))
+
+		else:
+			print("Tie.")
+
 
 
 
@@ -92,8 +104,5 @@ if __name__ == "__main__":
 	])
 
 	arena.fight(50)
-
-	arena.print_result()
-
 
 	print("Done")
