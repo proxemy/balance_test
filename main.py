@@ -108,8 +108,12 @@ if __name__ == "__main__":
 	print("Start")
 
 	arena = Arena([
-		Agent("Melee",[Skill(100, 0)]),
-		Agent("Ranged",[Skill(10, 100)]),
+		Agent("Melee",
+			[Skill(damage=100, range=0, cooldown=5, activation_time=1)]
+		),
+		Agent("Ranged",
+			[Skill(damage=50, range=100, cooldown=5, activation_time=1)]
+		)
 	])
 
 	arena.fight(50)
