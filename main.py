@@ -1,3 +1,5 @@
+#! /usr/bin/env python3.8
+
 
 import os
 
@@ -17,19 +19,19 @@ class Arena():
 
 
 	def reset(self):
-
 		self.agents = list(reversed(self.agents))
 
 		for i, agent in enumerate(self.agents):
 
-			pos_offset = i%2 * 1000
+			distance = 1000
 
-			agent.position = -500 + pos_offset
+			pos_offset = i%2 * distance
+
+			agent.position = -0.5 * distance + pos_offset
 			agent.health = 1000
 
 
 	def fight(self, num_rounds: int):
-
 		if num_rounds % 2 != 0:
 			raise Exception("'num_matches' must be an even number.")
 	
@@ -83,6 +85,7 @@ class Arena():
 			raise Exception("No agents alive")
 
 		return winner[0]
+
 
 	def print_agents(self):
 		s = " --- ".join((str(a) for a in self.agents))

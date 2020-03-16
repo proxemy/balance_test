@@ -10,5 +10,3 @@ class Skill():
 
 		self.damage = damage
 		self.range = _range
-
-		pass
