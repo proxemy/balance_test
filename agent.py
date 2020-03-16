@@ -9,27 +9,37 @@ class Agent():
 	"""
 
 	def __init__(self, name: str, skills: list):
-
 		self.name = name
 		self.skills = skills
 		self.health = 1000
 		self.move_speed = 10
 		self.position = None
 	
-	def get_name(self):
-		return "\033[4m" + str(self.name) + "\033[0m"
+	def colored(self, var: str):
+		
+		color_map = \
+		{
+			"name" :	"\033[4m",	# underlined
+			"health" :	"\033[92m",	# green
+			"position":	"\033[94m"	# blue
+		}
 
-	def get_hp(self):
-		return "\033[92m" + str(self.health) + "\033[0m"
+		if var not in vars(self).keys():
+			raise Exception("Can't get colored variable '{}' for agent.".format(var))
 
-	def get_pos(self):
-		return "\033[94m" + str(self.position) + "\033[0m"
+		val_str = str(vars(self)[var])
+		
+		if var in color_map.keys():
+			return color_map[var] + val_str + "\033[0m"
+
+		return val_str
+
 
 	def __repr__(self):
 		return \
-			self.get_name() +": " +\
-			"HP(" + self.get_hp() + "), "\
-			"Pos(" + self.get_pos() + ")"
+			self.colored("name") +": " +\
+			"HP(" + self.colored("health") + "), "\
+			"Pos(" + self.colored("position") + ")"
 
 
 	def fight(self, target) -> bool:
@@ -52,7 +62,6 @@ class Agent():
 		return self.get_distance_to(target) <= self.skills[0].range
 
 	def move_to(self, target):
-		
 		direction = 0
 		
 		if self.position < target.position:
@@ -68,7 +77,6 @@ class Agent():
 		self.position += dist * direction
 
 	def attack(self, target):
-
 		#TODO: determine best skill to use
 		target.health -= self.skills[0].damage
 

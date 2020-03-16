@@ -93,7 +93,7 @@ class Arena():
 
 
 	def print_winner(self):
-		print("\n\033[31mWinner\033[00m: " + self.get_winner().get_name())
+		print("\n\033[31mWinner\033[00m: " + self.get_winner().colored("name"))
 
 
 
