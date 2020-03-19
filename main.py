@@ -12,23 +12,10 @@ from skill import Skill
 
 
 class Arena():
-
 	def __init__(self, agents: list):
 		self.agents = agents
 		self.result = dict()
-
-
-	def reset(self):
-		self.agents = list(reversed(self.agents))
-
-		for i, agent in enumerate(self.agents):
-
-			distance = 1000
-
-			pos_offset = i%2 * distance
-
-			agent.position = -0.5 * distance + pos_offset
-			agent.health = 1000
+		self.tick = 1.0
 
 
 	def fight(self, num_rounds: int):
@@ -39,25 +26,35 @@ class Arena():
 
 			print(" --- Round: {}".format(r))
 			self.reset()
+			round_time = 0
 
-			is_winner = False
-
-			while not is_winner:
+			while not self.get_winner():
 
 				for i, agent in enumerate(self.agents):
-					opponent_idx = (i+1)%2
+					opponent = self.agents[(i+1)%2]
 
-					is_winner = agent.fight(self.agents[opponent_idx])
-
-					if is_winner:
-						break
+					agent.act(opponent, self.tick)
 
 				self.print_agents()
+				round_time += self.tick
+				#sleep(0.5)
 
 			self.print_winner()
 			self.collect_stats()
 
 		self.print_stats()
+
+
+	def reset(self):
+		self.agents = list(reversed(self.agents))
+
+		for i, agent in enumerate(self.agents):
+			max_distance = 1000
+
+			pos_offset = i%2 * max_distance
+
+			agent.pos.x = -0.5 * max_distance + pos_offset
+			agent.health = 1000
 
 
 	def collect_stats(self):
@@ -77,14 +74,12 @@ class Arena():
 
 
 	def get_winner(self):
-		winner = [ a for a in self.agents if a.health > 0 ]
+		winners = [ a for a in self.agents if a.health > 0 ]
 
-		if len(winner) > 1:
-			raise Exception("More than one agent alive")
-		elif len(winner) == 0:
-			raise Exception("No agents alive")
+		if len(winners) != 1:
+			return None
 
-		return winner[0]
+		return winners[0]
 
 
 	def print_agents(self):
@@ -104,15 +99,14 @@ class Arena():
 
 
 if __name__ == "__main__":
-
 	print("Start")
 
 	arena = Arena([
 		Agent("Melee",
-			[Skill(damage=100, range=0, cooldown=5, activation_time=1)]
+			[Skill(damage=100, range=0, cooldown=5, cast_time=1)]
 		),
 		Agent("Ranged",
-			[Skill(damage=50, range=100, cooldown=5, activation_time=1)]
+			[Skill(damage=86, range=100, cooldown=5, cast_time=1)]
 		)
 	])
 

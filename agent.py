@@ -1,6 +1,33 @@
+
 from skill import Skill
 
+from enum import Enum
+
 from pdb import set_trace as BP
+
+
+
+
+class Position():
+	def __init__(self, x=None, y=None, z=None):
+		self.x, self.y, self.z = (x,y,z)
+
+
+	def distance_to(self, pos):
+		return abs(self.x - pos.x)
+
+
+	def direction_to(self, pos):
+		if pos.x == self.x:
+			return 0
+		return (pos.x - self.x) / abs(pos.x - self.x)
+
+
+	def __repr__(self):
+		return "("+\
+			",".join(str(p) for p in (self.x,self.y,self.z) if p is not None)+\
+		")"
+
 
 
 class Agent():
@@ -8,20 +35,25 @@ class Agent():
 	The Agent class represents a basic Agent in combat.
 	"""
 
+
 	def __init__(self, name: str, skills: list):
 		self.name = name
 		self.skills = skills
 		self.health = 1000
 		self.move_speed = 10
-		self.position = None
-	
+		self.pos = Position() 
+
+		self.cast_target = None
+		self.cast_skill = None
+		self.cast_time = None
+
+
 	def colored(self, var: str):
-		
 		color_map = \
 		{
 			"name" :	"\033[4m",	# underlined
 			"health" :	"\033[92m",	# green
-			"position":	"\033[94m"	# blue
+			"pos":		"\033[94m"	# blue
 		}
 
 		if var not in vars(self).keys():
@@ -36,47 +68,80 @@ class Agent():
 
 
 	def __repr__(self):
-		return \
-			self.colored("name") +": " +\
-			"HP(" + self.colored("health") + "), "\
-			"Pos(" + self.colored("position") + ")"
+		return "{}: HP({}) Pos{}".format(
+				self.colored("name"),
+				self.colored("health"),
+				self.colored("pos")
+			) 
 
 
-	def fight(self, target) -> bool:
+	def act(self, opponent, tick: float):
+		"""
+		This function is the main action handle for any agent.
+		It will determine which skill to use or to fight or flight.
+		"""
 
-		if not self.in_range_to(target):
-			self.move_to(target)
+		if self.cast_skill is None:
+			self.cast_skill, self.cast_target = \
+				self.determine_skill_to_use(opponent)
+
+		if self.cast_skill is not None:
+
+			if self.cast_time is None:
+				self.cast_time = self.cast_skill.cast_time
+
+			elif self.cast_time <= 0:
+				self.cast_skill.cast_on(self.cast_target)
+
+				self.cast_target = None
+				self.cast_skill = None
+				self.cast_time = None
 
 		else:
-			self.attack(target)
+			pos = self.determine_position_to_move(opponent)
 
-		return target.health <= 0
+			if pos:
+				self.move_to(pos, tick)
+
+		self.update(tick)
 
 
-	def get_distance_to(self, target):
-		return abs(self.position - target.position)
+	def determine_skill_to_use(self, opponent):
+		skill = None
+		distance = self.pos.distance_to(opponent.pos)
+
+		#TODO: determine optimal skills
+		for skl in self.skills:
+			if skl.in_range_to(distance) and skl.is_ready():
+				skill = skl
+				break
+
+		return (skill, opponent)
 
 
-	def in_range_to(self, target) -> bool:
-		#TODO: check all skill ranges for further actions
-		return self.get_distance_to(target) <= self.skills[0].range
+	def determine_position_to_move(self, opponent):
+		#TODO: determine aggressive or defensive positioning
+		return opponent.pos
 
-	def move_to(self, target):
-		direction = 0
-		
-		if self.position < target.position:
-			direction = 1
-		elif self.position > target.position:
-			direction = -1
 
-		dist = self.get_distance_to(target)
+	def move_to(self, position, tick: float):
+		dist = self.pos.distance_to(position)
 
 		if dist >= self.move_speed:
 			dist = self.move_speed
 
-		self.position += dist * direction
+		self.pos.x += dist * self.pos.direction_to(position) * tick
 
-	def attack(self, target):
-		#TODO: determine best skill to use
-		target.health -= self.skills[0].damage
+
+	def update(self, tick: float):
+		if self.cast_time is not None:
+			self.cast_time -= tick
+
+		for skill in self.skills:
+			skill.update(tick)
+
+
+	def get_distance_to(self, position):
+		return abs(self.position - position)
+
 
