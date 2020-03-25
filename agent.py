@@ -1,16 +1,12 @@
 
-from skill import Skill
-
-from enum import Enum
-
-from pdb import set_trace as BP
+#from pdb import set_trace as BP
 
 
 
 
 class Position():
 	def __init__(self, x=None, y=None, z=None):
-		self.x, self.y, self.z = (x,y,z)
+		self.x, self.y, self.z = (x, y, z)
 
 
 	def distance_to(self, pos):
@@ -24,9 +20,9 @@ class Position():
 
 
 	def __repr__(self):
-		return "("+\
-			",".join(str(p) for p in (self.x,self.y,self.z) if p is not None)+\
-		")"
+		return "(" + \
+			",".join(str(p) for p in (self.x, self.y, self.z) if p is not None) + \
+			")"
 
 
 
@@ -49,8 +45,7 @@ class Agent():
 
 
 	def colored(self, var: str):
-		color_map = \
-		{
+		color_map = {
 			"name" :	"\033[4m",	# underlined
 			"health" :	"\033[92m",	# green
 			"pos":		"\033[94m"	# blue
@@ -69,10 +64,10 @@ class Agent():
 
 	def __repr__(self):
 		return "{}: HP({}) Pos{}".format(
-				self.colored("name"),
-				self.colored("health"),
-				self.colored("pos")
-			) 
+			self.colored("name"),
+			self.colored("health"),
+			self.colored("pos")
+		) 
 
 
 	def act(self, opponent, tick: float):

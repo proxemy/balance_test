@@ -1,10 +1,10 @@
 
 
-from pdb import set_trace as BP
+#from pdb import set_trace as BP
+
 
 
 class Skill():
-
 	def __init__(self, damage: int, range: int, cooldown: int, cast_time: int):
 		self.damage = damage
 		self.range = range

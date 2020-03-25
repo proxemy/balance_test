@@ -1,10 +1,10 @@
-#! /usr/bin/env python3.8
+#!/usr/bin/env python3.8
 
 
-import os
 
-from pdb import set_trace as BP
-from time import sleep
+
+#from pdb import set_trace as BP
+#from time import sleep
 
 from agent import Agent
 from skill import Skill
@@ -12,6 +12,8 @@ from skill import Skill
 
 
 class Arena():
+
+
 	def __init__(self, agents: list):
 		self.agents = agents
 		self.result = dict()
@@ -68,7 +70,7 @@ class Arena():
 
 	def print_stats(self):
 		print(
-			" --- Result:\n" + \
+			" --- Result:\n" +
 			"\n".join(str(i) for i in self.result.items())
 		)
 
