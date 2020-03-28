@@ -10,7 +10,6 @@ from agent import Agent
 from skill import Skill
 
 
-
 class Arena():
 
 
@@ -23,7 +22,7 @@ class Arena():
 	def fight(self, num_rounds: int):
 		if num_rounds % 2 != 0:
 			raise Exception("'num_matches' must be an even number.")
-	
+
 		for r in range(num_rounds):
 
 			print(" --- Round: {}".format(r))

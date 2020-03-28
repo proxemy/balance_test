@@ -4,6 +4,30 @@
 
 
 
+
+class Command():
+	def __init__(self, timestamp, agent):
+		self.timestamp = timestamp
+		self.agent = agent
+
+
+class MoveCommand(Command):
+	def __init__(self, timestamp, agent, destination):
+		super().__init__(timestamp, agent)
+
+		self.destination = destination
+
+
+class CastCommand(Command):
+	def __init__(self, timestamp, agent, target, skill):
+		Command.__init__(timestamp, agent)
+
+		self.target = target
+		self.skill = skill
+
+
+
+
 class Skill():
 	def __init__(self, damage: int, range: int, cooldown: int, cast_time: int):
 		self.damage = damage

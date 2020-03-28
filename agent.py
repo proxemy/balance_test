@@ -3,7 +3,6 @@
 
 
 
-
 class Position():
 	def __init__(self, x=None, y=None, z=None):
 		self.x, self.y, self.z = (x, y, z)
@@ -27,11 +26,6 @@ class Position():
 
 
 class Agent():
-	"""
-	The Agent class represents a basic Agent in combat.
-	"""
-
-
 	def __init__(self, name: str, skills: list):
 		self.name = name
 		self.skills = skills
